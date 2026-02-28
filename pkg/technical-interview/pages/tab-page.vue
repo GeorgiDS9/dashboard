@@ -202,7 +202,11 @@ export default defineComponent({
         name="first"
         label="Tab 1"
       >
-        <p class="mb-20">
+        <p
+          class="mb-20"
+          aria-live="polite"
+          aria-atomic="true"
+        >
           {{ t('interview.tabPage.counter') }}: {{ counter }}
         </p>
         <button
@@ -219,28 +223,59 @@ export default defineComponent({
         label="Tab 2"
       >
         <div>
-          <p><strong>{{ t('interview.tabPage.current') }}:</strong> {{ formattedCurrent }}</p>
-          <p><strong>{{ t('interview.tabPage.updated') }}:</strong> {{ formattedUpdated }}</p>
-          <p><strong>{{ t('interview.tabPage.result') }}:</strong> {{ timeComparison }}</p>
+          <p class="mb-5">
+            <strong>{{ t('interview.tabPage.current') }}:</strong> {{ formattedCurrent }}
+          </p>
+          <p class="mb-5">
+            <strong>{{ t('interview.tabPage.updated') }}:</strong> {{ formattedUpdated }}
+          </p>
+          <p
+            class="mb-5"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <strong>{{ t('interview.tabPage.result') }}:</strong> {{ timeComparison }}
+          </p>
 
           <div class="mt-20">
-            {{ t('interview.tabPage.hours') }}:
-            <input
-              v-model="offsetHours"
-              type="number"
-            >
+            <div class="mb-10">
+              <label
+                style="display:block; margin-bottom:4px"
+                for="offset-hours"
+              >{{ t('interview.tabPage.hours') }}:</label>
+              <input
+                id="offset-hours"
+                v-model="offsetHours"
+                type="number"
+                style="width:80px"
+              >
+            </div>
 
-            {{ t('interview.tabPage.minutes') }}:
-            <input
-              v-model="offsetMinutes"
-              type="number"
-            >
+            <div class="mb-10">
+              <label
+                style="display:block; margin-bottom:4px"
+                for="offset-minutes"
+              >{{ t('interview.tabPage.minutes') }}:</label>
+              <input
+                id="offset-minutes"
+                v-model="offsetMinutes"
+                type="number"
+                style="width:80px"
+              >
+            </div>
 
-            {{ t('interview.tabPage.seconds') }}:
-            <input
-              v-model="offsetSeconds"
-              type="number"
-            >
+            <div>
+              <label
+                style="display:block; margin-bottom:4px"
+                for="offset-seconds"
+              >{{ t('interview.tabPage.seconds') }}:</label>
+              <input
+                id="offset-seconds"
+                v-model="offsetSeconds"
+                type="number"
+                style="width:80px"
+              >
+            </div>
           </div>
         </div>
       </Tab>
@@ -249,26 +284,26 @@ export default defineComponent({
         label="Tab 3"
       >
         <div>
-          <p class="mb-10">
-            {{ t('interview.tabPage.uploadJson') }}:
-          </p>
-
+          <div class="mb-10">
+            <label for="json-file">{{ t('interview.tabPage.uploadJson') }}:</label>
+          </div>
           <input
+            id="json-file"
             type="file"
             accept=".json"
             @change="onJsonFileChange"
           >
 
-          <br><br>
-
-          <button
-            type="button"
-            class="btn role-primary"
-            :disabled="!jsonObj"
-            @click="swapJson"
-          >
-            {{ t('interview.tabPage.swap') }}
-          </button>
+          <div class="mt-10">
+            <button
+              type="button"
+              class="btn role-primary"
+              :disabled="!jsonObj"
+              @click="swapJson"
+            >
+              {{ t('interview.tabPage.swap') }}
+            </button>
+          </div>
 
           <p
             v-if="jsonError"
@@ -302,29 +337,31 @@ export default defineComponent({
         label="Tab 5"
       >
         <div>
-          <p class="mb-10">
-            {{ t('interview.tabPage.enterBrackets') }}:
-          </p>
-
+          <div class="mb-10">
+            <label for="bracket-input">{{ t('interview.tabPage.enterBrackets') }}:</label>
+          </div>
           <input
+            id="bracket-input"
             v-model="bracketInput"
             placeholder="e.g. [()]{}"
             style="width:300px"
           >
 
-          <br><br>
-
-          <button
-            type="button"
-            class="btn role-primary"
-            @click="checkBrackets"
-          >
-            {{ t('interview.tabPage.check') }}
-          </button>
+          <div class="mt-10">
+            <button
+              type="button"
+              class="btn role-primary"
+              @click="checkBrackets"
+            >
+              {{ t('interview.tabPage.check') }}
+            </button>
+          </div>
 
           <p
             v-if="bracketResult !== null"
             class="mt-10"
+            aria-live="polite"
+            aria-atomic="true"
           >
             {{ t('interview.tabPage.result') }}:
             <strong>
