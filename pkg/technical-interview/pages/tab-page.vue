@@ -2,7 +2,7 @@
 import { defineComponent } from 'vue';
 import Tabbed from '@shell/components/Tabbed';
 import Tab from '@shell/components/Tabbed/Tab';
-import { checkBrackets as validateBrackets, decrement as decrementCounter } from '../utils/tab-helpers';
+import { checkBrackets as validateBrackets, decrement as decrementCounter, swapJsonKeys } from '../utils/tab-helpers';
 
 type TimeComparison = 'before' | 'same' | 'after';
 
@@ -138,27 +138,7 @@ export default defineComponent({
     swapJson() {
       if (!this.jsonObj) return;
 
-      const result = {};
-
-      for (const key in this.jsonObj) {
-        const value = this.jsonObj[key];
-
-        // primitive → swap
-        if (
-          value === null ||
-      typeof value === 'string' ||
-      typeof value === 'number' ||
-      typeof value === 'boolean'
-        ) {
-          result[String(value)] = key;
-
-          // object or array - keep same
-        } else {
-          result[key] = value;
-        }
-      }
-
-      this.swappedObj = result;
+      this.swappedObj = swapJsonKeys(this.jsonObj);
     },
 
     // Tab 5
