@@ -57,6 +57,45 @@ export const swapJsonKeys = (obj: Record<string, unknown>): Record<string, unkno
   return result;
 };
 
+// Tab 4
+export const coinChange = (coins: number[], amount: number): number[] | null => {
+  if (amount === 0) return [];
+
+  // do not allow negative amounts
+  if (amount < 0) return null;
+
+  const bestCoinsForAmount: (number[] | null)[] =
+    new Array(amount + 1).fill(null);
+
+  // base case: 0 amount = empty array
+  bestCoinsForAmount[0] = [];
+
+  // build up from 1 to amount
+  for (let i = 1; i <= amount; i++) {
+    for (const coin of coins) {
+      // can we use this coin? (don't go negative)
+      if (coin > i) continue;
+
+      // what's the best way to make the remaining amount?
+      const remainder = bestCoinsForAmount[i - coin];
+
+      // if remainder is impossible, skip
+      if (remainder === null) continue;
+
+      // this combo = remainder coins + this coin
+      const combo = [...remainder, coin];
+
+      const currentBest = bestCoinsForAmount[i];
+
+      if (currentBest === null || combo.length < currentBest.length) {
+        bestCoinsForAmount[i] = combo;
+      }
+    }
+  }
+
+  return bestCoinsForAmount[amount];
+};
+
 // Tab 5
 export function checkBrackets(str: string): boolean {
   const stack: string[] = [];

@@ -2,7 +2,7 @@
 import { defineComponent } from 'vue';
 import Tabbed from '@shell/components/Tabbed';
 import Tab from '@shell/components/Tabbed/Tab';
-import { checkBrackets as validateBrackets, decrement as decrementCounter, swapJsonKeys } from '../utils/tab-helpers';
+import { checkBrackets as validateBrackets, decrement as decrementCounter, swapJsonKeys, coinChange } from '../utils/tab-helpers';
 
 type TimeComparison = 'before' | 'same' | 'after';
 
@@ -30,6 +30,11 @@ export default defineComponent({
       jsonObj:    null as Record<string, unknown> | null,
       swappedObj: null as Record<string, string> | null,
       jsonError:  '',
+
+      // Tab 4
+      coinsInput:  '1,2,5',
+      amountInput: 11,
+      coinResult:  null as number[] | null,
 
       // Tab 5
       bracketInput:  '',
@@ -91,7 +96,8 @@ export default defineComponent({
       if (this.swappedObj) return JSON.stringify(this.swappedObj, null, 2);
 
       return '—';
-    }
+    },
+
   },
 
   mounted() {
@@ -139,6 +145,18 @@ export default defineComponent({
       if (!this.jsonObj) return;
 
       this.swappedObj = swapJsonKeys(this.jsonObj);
+    },
+
+    // Tab 4
+    calculateCoins() {
+      const coins = this.coinsInput
+        .split(',')
+        .map((s) => Number(s.trim()))
+        .filter((n) => !isNaN(n));
+
+      const amount = Number(this.amountInput);
+
+      this.coinResult = coinChange(coins, amount);
     },
 
     // Tab 5
@@ -282,8 +300,71 @@ export default defineComponent({
         label="Tab 4"
       >
         <div>
-          <p>
-            Tab 4 (Coin Change) not implemented within the time limit of 6h.
+          <p class="mb-10">
+            {{ t('interview.tabPage.coinChangePrompt') }}
+          </p>
+
+          <div class="mb-10">
+            <label
+              style="display:block; margin-bottom:4px"
+              for="coins-input"
+            >
+              {{ t('interview.tabPage.coins') }}:
+            </label>
+            <input
+              id="coins-input"
+              v-model="coinsInput"
+              type="text"
+              placeholder="e.g. 1,2,5"
+              style="width:300px"
+            >
+          </div>
+
+          <div class="mb-10">
+            <label
+              style="display:block; margin-bottom:4px"
+              for="amount-input"
+            >
+              {{ t('interview.tabPage.amount') }}:
+            </label>
+            <input
+              id="amount-input"
+              v-model.number="amountInput"
+              type="number"
+              min="0"
+              step="1"
+              style="width:120px"
+            >
+          </div>
+
+          <div class="mt-10">
+            <button
+              type="button"
+              class="btn role-primary"
+              @click="calculateCoins"
+            >
+              {{ t('interview.tabPage.calculate') }}
+            </button>
+          </div>
+
+          <p
+            class="mt-10"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {{ t('interview.tabPage.result') }}:
+            <strong v-if="coinResult === null">null</strong>
+            <strong v-else>[{{ coinResult.join(', ') }}]</strong>
+          </p>
+
+          <p
+            v-if="coinResult !== null"
+            class="mt-5"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {{ t('interview.tabPage.coinCount') }}:
+            <strong>{{ coinResult.length }}</strong>
           </p>
         </div>
       </Tab>

@@ -1,5 +1,5 @@
 import {
-  checkBrackets, decrement, getUpdatedDate, compareTime, swapJsonKeys
+  checkBrackets, decrement, getUpdatedDate, compareTime, swapJsonKeys, coinChange
 } from '../tab-helpers';
 
 // Tab 1
@@ -137,6 +137,39 @@ describe('tab 3: JSON key-value swap', () => {
 
   it('should return an empty object for empty input', () => {
     expect(swapJsonKeys({})).toStrictEqual({});
+  });
+});
+
+// Tab 4
+describe('tab 4: Coin change', () => {
+  describe('minimum coin change', () => {
+    it('should return empty array for amount 0', () => {
+      expect(coinChange([1, 2, 5], 0)).toStrictEqual([]);
+    });
+
+    it('should return minimum coins for amount 11 with [1,2,5]', () => {
+      const result = coinChange([1, 2, 5], 11);
+
+      expect(result).not.toBeNull();
+      expect(result!).toHaveLength(3);
+      expect(result!.reduce((a, b) => a + b, 0)).toStrictEqual(11);
+    });
+
+    it('should return null for negative amount', () => {
+      expect(coinChange([1, 2, 5], -1)).toBeNull();
+    });
+
+    it('should return null when no solution exists', () => {
+      expect(coinChange([2], 3)).toBeNull();
+    });
+
+    it('should return single coin when amount equals coin', () => {
+      expect(coinChange([1, 2, 5], 5)).toStrictEqual([5]);
+    });
+
+    it('should return multiple of same coin when optimal', () => {
+      expect(coinChange([2], 6)).toStrictEqual([2, 2, 2]);
+    });
   });
 });
 

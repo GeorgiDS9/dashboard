@@ -16,5 +16,10 @@ interview:
     minutes: 'Minutes'
     seconds: 'Seconds'
     invalidJson: 'Invalid JSON'
+    coinChangePrompt: 'Enter coin denominations and an amount to calculate the minimum number of coins needed.'
+    coins: 'Coins'
+    amount: 'Amount'
+    calculate: 'Calculate'
+    coinCount: 'Number of coins'
 product:
   interview: 'Technical Interview'
