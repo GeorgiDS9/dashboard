@@ -2,6 +2,7 @@
 import { defineComponent } from 'vue';
 import Tabbed from '@shell/components/Tabbed';
 import Tab from '@shell/components/Tabbed/Tab';
+import { checkBrackets as validateBrackets, decrement as decrementCounter } from '../utils/tab-helpers';
 
 type TimeComparison = 'before' | 'same' | 'after';
 
@@ -106,9 +107,7 @@ export default defineComponent({
   methods: {
     // Tab 1
     decrement() {
-      if (this.counter > 0) {
-        this.counter -= 1;
-      }
+      this.counter = decrementCounter(this.counter);
     },
 
     // Tab 3
@@ -164,31 +163,7 @@ export default defineComponent({
 
     // Tab 5
     checkBrackets() {
-      const str = this.bracketInput;
-      const stack: string[] = [];
-
-      const pairs: Record<string, string> = {
-        ')': '(',
-        ']': '[',
-        '}': '{'
-      };
-
-      for (const char of str) {
-        if (char === '(' || char === '[' || char === '{') {
-          stack.push(char); // push opening bracket
-        } else if (char === ')' || char === ']' || char === '}') {
-          const last = stack.pop(); // closing bracket
-
-          if (last !== pairs[char]) {
-            this.bracketResult = false;
-
-            return;
-          }
-        }
-      }
-
-      // valid only if nothing left open
-      this.bracketResult = stack.length === 0;
+      this.bracketResult = validateBrackets(this.bracketInput);
     },
   },
 });
